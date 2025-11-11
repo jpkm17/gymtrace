@@ -2,63 +2,69 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Plano;
 use Illuminate\Http\Request;
 
 class PlanoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    // Exibir lista de planos
     public function index()
     {
-        //
+        $planos = Plano::orderBy('descricao')->get();
+        return view('planos.index', compact('planos'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    // Formulário de criação
     public function create()
     {
-        //
+        return view('planos.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    // Salvar novo plano
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'descricao' => 'required|string|max:100',
+            'duracao_dias' => 'required|integer|min:1',
+            'valor' => 'required|numeric|min:0',
+            'ativo' => 'required|boolean'
+        ]);
+
+        Plano::create($validated);
+
+        return redirect()->route('planos.index')->with('success', 'Plano cadastrado com sucesso!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    // Formulário de edição
+    public function edit($id)
     {
-        //
+        $plano = Plano::findOrFail($id);
+        return view('planos.edit', compact('plano'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    // Atualizar plano
+    public function update(Request $request, $id)
     {
-        //
+        $plano = Plano::findOrFail($id);
+
+        $validated = $request->validate([
+            'descricao' => 'required|string|max:100',
+            'duracao_dias' => 'required|integer|min:1',
+            'valor' => 'required|numeric|min:0',
+            'ativo' => 'required|boolean'
+        ]);
+
+        $plano->update($validated);
+
+        return redirect()->route('planos.index')->with('success', 'Plano atualizado com sucesso!');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    // Excluir plano
+    public function destroy($id)
     {
-        //
-    }
+        $plano = Plano::findOrFail($id);
+        $plano->delete();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return redirect()->route('planos.index')->with('success', 'Plano excluído com sucesso!');
     }
 }
