@@ -2,63 +2,72 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Pagamento;
+use App\Models\Aluno;
 use Illuminate\Http\Request;
 
 class PagamentoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    // Exibir lista de pagamentos
     public function index()
     {
-        //
+        $pagamentos = Pagamento::with('aluno')->orderByDesc('data_pagamento')->get();
+        return view('pagamentos.index', compact('pagamentos'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    // Formulário de criação
     public function create()
     {
-        //
+        $alunos = Aluno::orderBy('nome')->get();
+        return view('pagamentos.create', compact('alunos'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    // Salvar novo pagamento
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'aluno_id' => 'required|exists:alunos,id',
+            'data_pagamento' => 'required|date',
+            'valor' => 'required|numeric|min:0',
+            'status' => 'required|string|in:pago,pendente,atrasado'
+        ]);
+
+        Pagamento::create($validated);
+
+        return redirect()->route('pagamentos.index')->with('success', 'Pagamento registrado com sucesso!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    // Formulário de edição
+    public function edit($id)
     {
-        //
+        $pagamento = Pagamento::findOrFail($id);
+        $alunos = Aluno::orderBy('nome')->get();
+        return view('pagamentos.edit', compact('pagamento', 'alunos'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    // Atualizar pagamento
+    public function update(Request $request, $id)
     {
-        //
+        $pagamento = Pagamento::findOrFail($id);
+
+        $validated = $request->validate([
+            'aluno_id' => 'required|exists:alunos,id',
+            'data_pagamento' => 'required|date',
+            'valor' => 'required|numeric|min:0',
+            'status' => 'required|string|in:pago,pendente,atrasado'
+        ]);
+
+        $pagamento->update($validated);
+
+        return redirect()->route('pagamentos.index')->with('success', 'Pagamento atualizado com sucesso!');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    // Deletar pagamento
+    public function destroy($id)
     {
-        //
-    }
+        $pagamento = Pagamento::findOrFail($id);
+        $pagamento->delete();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return redirect()->route('pagamentos.index')->with('success', 'Pagamento excluído com sucesso!');
     }
 }
