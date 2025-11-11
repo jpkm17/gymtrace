@@ -2,63 +2,78 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Presenca;
+use App\Models\Aluno;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class PresencaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    // Exibir lista de presenças
     public function index()
     {
-        //
+        $presencas = Presenca::with(['aluno', 'instrutor'])
+            ->orderByDesc('data_presenca')
+            ->get();
+
+        return view('presencas.index', compact('presencas'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    // Formulário de criação
     public function create()
     {
-        //
+        $alunos = Aluno::orderBy('nome')->get();
+        $instrutores = User::where('perfil', 'instrutor')->orderBy('nome')->get();
+
+        return view('presencas.create', compact('alunos', 'instrutores'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    // Salvar nova presença
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'aluno_id' => 'required|exists:alunos,id',
+            'instrutor_id' => 'required|exists:usuarios,id',
+            'data_presenca' => 'required|date'
+        ]);
+
+        Presenca::create($validated);
+
+        return redirect()->route('presencas.index')->with('success', 'Presença registrada com sucesso!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    // Formulário de edição
+    public function edit($id)
     {
-        //
+        $presenca = Presenca::findOrFail($id);
+        $alunos = Aluno::orderBy('nome')->get();
+        $instrutores = User::where('perfil', 'instrutor')->orderBy('nome')->get();
+
+        return view('presencas.edit', compact('presenca', 'alunos', 'instrutores'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    // Atualizar presença
+    public function update(Request $request, $id)
     {
-        //
+        $presenca = Presenca::findOrFail($id);
+
+        $validated = $request->validate([
+            'aluno_id' => 'required|exists:alunos,id',
+            'instrutor_id' => 'required|exists:usuarios,id',
+            'data_presenca' => 'required|date'
+        ]);
+
+        $presenca->update($validated);
+
+        return redirect()->route('presencas.index')->with('success', 'Presença atualizada com sucesso!');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    // Deletar presença
+    public function destroy($id)
     {
-        //
-    }
+        $presenca = Presenca::findOrFail($id);
+        $presenca->delete();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return redirect()->route('presencas.index')->with('success', 'Presença excluída com sucesso!');
     }
 }
