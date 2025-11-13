@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
- 
+
 use App\Http\Controllers\{
-    AlunoController, PlanoController, PagamentoController, PresencaController, NotificacaoController, AuthController
+    AlunoController, PlanoController, PagamentoController, PresencaController, NotificacaoController, AuthController, UsuarioController
 };
 
 Route::get('/', function () {
@@ -20,4 +20,6 @@ Route::resource('planos', PlanoController::class);
 Route::resource('pagamentos', PagamentoController::class);
 Route::resource('presencas', PresencaController::class);
 Route::resource('notificacoes', NotificacaoController::class);
+
+Route::resource('usuarios', UsuarioController::class);
 
