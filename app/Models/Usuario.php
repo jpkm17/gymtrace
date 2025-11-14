@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+class Usuario extends Authenticatable
 {
     use HasFactory, Notifiable;
 
@@ -19,13 +19,17 @@ class User extends Authenticatable
         'perfil'
     ];
 
-    protected $hidden = [
-        'senha'
-    ];
+    protected $hidden = ['senha'];
 
     public $timestamps = true;
 
-    // Mutator para criptografar a senha automaticamente
+    // Define que o campo de senha é "senha" (não "password")
+    public function getAuthPassword()
+    {
+        return $this->senha;
+    }
+
+    // Criptografar senha automaticamente
     public function setSenhaAttribute($value)
     {
         $this->attributes['senha'] = bcrypt($value);
