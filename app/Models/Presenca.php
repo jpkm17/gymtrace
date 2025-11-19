@@ -25,6 +25,6 @@ class Presenca extends Model
 
     public function instrutor()
     {
-        return $this->belongsTo(User::class, 'instrutor_id');
+        return $this->belongsTo(Usuario::class, 'instrutor_id');
     }
 }
