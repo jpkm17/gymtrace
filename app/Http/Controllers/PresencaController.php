@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Presenca;
 use App\Models\Aluno;
-use App\Models\User;
+use App\Models\Usuario;
 use Illuminate\Http\Request;
 
 class PresencaController extends Controller
@@ -23,7 +23,7 @@ class PresencaController extends Controller
     public function create()
     {
         $alunos = Aluno::orderBy('nome')->get();
-        $instrutores = User::where('perfil', 'instrutor')->orderBy('nome')->get();
+        $instrutores = Usuario::where('perfil', 'instrutor')->orderBy('nome')->get();
 
         return view('presencas.create', compact('alunos', 'instrutores'));
     }
@@ -47,7 +47,7 @@ class PresencaController extends Controller
     {
         $presenca = Presenca::findOrFail($id);
         $alunos = Aluno::orderBy('nome')->get();
-        $instrutores = User::where('perfil', 'instrutor')->orderBy('nome')->get();
+        $instrutores = Usuario::where('perfil', 'instrutor')->orderBy('nome')->get();
 
         return view('presencas.edit', compact('presenca', 'alunos', 'instrutores'));
     }
