@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Models\Usuario;
 use Illuminate\Http\Request;
 
 class UsuarioController extends Controller
@@ -10,14 +10,14 @@ class UsuarioController extends Controller
     // Lista de usuários
     public function index()
     {
-        $usuarios = User::orderBy('nome')->get();
-        return view('usuarios.index', compact('usuarios'));
+        $usuarios = Usuario::orderBy('nome')->get();
+        return view('usuario.index', compact('usuarios'));
     }
 
     // Formulário de criação
     public function create()
     {
-        return view('usuarios.create');
+        return view('usuario.create');
     }
 
     // Salvar novo usuário
@@ -30,7 +30,7 @@ class UsuarioController extends Controller
             'perfil' => 'required|in:administrador,instrutor'
         ]);
 
-        User::create($validated);
+        Usuario::create($validated);
 
         return redirect()->route('usuarios.index')->with('success', 'Usuário criado com sucesso!');
     }
@@ -38,14 +38,14 @@ class UsuarioController extends Controller
     // Formulário de edição
     public function edit($id)
     {
-        $usuario = User::findOrFail($id);
-        return view('usuarios.edit', compact('usuario'));
+        $usuario = Usuario::findOrFail($id);
+        return view('usuario.edit', compact('usuario'));
     }
 
     // Atualizar usuário
     public function update(Request $request, $id)
     {
-        $usuario = User::findOrFail($id);
+        $usuario = Usuario::findOrFail($id);
 
         $validated = $request->validate([
             'nome' => 'required|string|max:100',
@@ -68,7 +68,7 @@ class UsuarioController extends Controller
     // Excluir usuário
     public function destroy($id)
     {
-        $usuario = User::findOrFail($id);
+        $usuario = Usuario::findOrFail($id);
         $usuario->delete();
 
         return redirect()->route('usuarios.index')->with('success', 'Usuário excluído com sucesso!');
