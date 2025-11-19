@@ -1,23 +1,115 @@
 @extends('layouts.app')
 
-@section('title', 'Painel Principal')
-
 @section('content')
 <div class="container">
-    <h4>Bem-vindo, {{ Auth::user()->nome }}!</h4>
-    <p>Perfil: <b>{{ ucfirst(Auth::user()->perfil) }}</b></p>
 
-    <div class="section">
-        <a href="{{ route('alunos.index') }}" class="btn blue">Gerenciar Alunos</a>
-        <a href="{{ route('planos.index') }}" class="btn green">Gerenciar Planos</a>
-        <a href="{{ route('pagamentos.index') }}" class="btn orange">Pagamentos</a>
-        <a href="{{ route('presencas.index') }}" class="btn teal">Presenças</a>
-        <a href="{{ route('notificacoes.index') }}" class="btn purple">Notificações</a>
+    {{-- Saudação --}}
+    <h4 class="center-align">
+        Bem-vindo, {{ Auth::user()->nome }}!
+    </h4>
+
+    <p class="center-align grey-text">
+        Perfil: {{ ucfirst(Auth::user()->perfil) }}
+    </p>
+
+    <div class="row">
+
+        {{-- ================= Administrador ================= --}}
+        @if(Auth::user()->perfil === 'administrador')
+
+            {{-- Usuários --}}
+            <div class="col s12 m4">
+                <a href="{{ route('usuarios.index') }}">
+                    <div class="card hoverable">
+                        <div class="card-content center">
+                            <i class="material-icons large">group</i>
+                            <h6><strong>Gerenciar Usuários</strong></h6>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            {{-- Planos --}}
+            <div class="col s12 m4">
+                <a href="{{ route('planos.index') }}">
+                    <div class="card hoverable">
+                        <div class="card-content center">
+                            <i class="material-icons large">assignment</i>
+                            <h6><strong>Planos</strong></h6>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            {{-- Alunos --}}
+            <div class="col s12 m4">
+                <a href="{{ route('alunos.index') }}">
+                    <div class="card hoverable">
+                        <div class="card-content center">
+                            <i class="material-icons large">person</i>
+                            <h6><strong>Alunos</strong></h6>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            {{-- Pagamentos --}}
+            <div class="col s12 m4">
+                <a href="{{ route('pagamentos.index') }}">
+                    <div class="card hoverable">
+                        <div class="card-content center">
+                            <i class="material-icons large">attach_money</i>
+                            <h6><strong>Pagamentos</strong></h6>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            {{-- Notificações --}}
+            <div class="col s12 m4">
+                <a href="{{ route('notificacoes.index') }}">
+                    <div class="card hoverable">
+                        <div class="card-content center">
+                            <i class="material-icons large">notifications</i>
+                            <h6><strong>Notificações</strong></h6>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+        @endif
+
+
+        {{-- ================= Instrutor ================= --}}
+        @if(Auth::user()->perfil === 'instrutor')
+
+            {{-- Presenças --}}
+            <div class="col s12 m4">
+                <a href="{{ route('presencas.index') }}">
+                    <div class="card hoverable">
+                        <div class="card-content center">
+                            <i class="material-icons large">check_circle</i>
+                            <h6><strong>Presenças</strong></h6>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            {{-- Alunos (visualização permitida) --}}
+            <div class="col s12 m4">
+                <a href="{{ route('alunos.index') }}">
+                    <div class="card hoverable">
+                        <div class="card-content center">
+                            <i class="material-icons large">person</i>
+                            <h6><strong>Alunos</strong></h6>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+        @endif
+
     </div>
 
-    <form method="POST" action="{{ route('logout') }}">
-        @csrf
-        <button type="submit" class="btn red">Sair</button>
-    </form>
 </div>
 @endsection
