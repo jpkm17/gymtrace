@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Notificacao;
 use App\Models\Aluno;
 use Illuminate\Http\Request;
+use App\Mail\NotificacaoAlunoMail;
+use Illuminate\Support\Facades\Mail;
 
 class NotificacaoController extends Controller
 {
@@ -28,16 +30,28 @@ class NotificacaoController extends Controller
     // Salvar nova notificação
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'aluno_id' => 'required|exists:alunos,id',
-            'mensagem' => 'required|string|min:5',
-            'tipo' => 'required|in:vencimento,pagamento,lembrete',
-            'data_envio' => 'required|date'
+        $request->validate([
+            'aluno_id' => 'required',
+            'mensagem' => 'required',
+            'tipo' => 'required'
         ]);
 
-        Notificacao::create($validated);
+        // Salva no banco
+        $notificacao = Notificacao::create([
+            'aluno_id' => $request->aluno_id,
+            'mensagem' => $request->mensagem,
+            'tipo' => $request->tipo,
+        ]);
 
-        return redirect()->route('notificacoes.index')->with('success', 'Notificação criada com sucesso!');
+        // Enviar e-mail
+        $aluno = Aluno::find($request->aluno_id);
+
+        Mail::to($aluno->email)->send(
+            new NotificacaoAlunoMail($request->mensagem)
+        );
+
+        return redirect()->route('notificacoes.index')
+            ->with('success', 'Notificação enviada e registrada.');
     }
 
     // Formulário de edição
