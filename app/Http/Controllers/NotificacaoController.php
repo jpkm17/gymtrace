@@ -2,63 +2,76 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Notificacao;
+use App\Models\Aluno;
 use Illuminate\Http\Request;
 
 class NotificacaoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    // Exibir todas as notificações
     public function index()
     {
-        //
+        $notificacoes = Notificacao::with('aluno')
+            ->orderByDesc('data_envio')
+            ->get();
+
+        return view('notificacoes.index', compact('notificacoes'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    // Formulário de criação
     public function create()
     {
-        //
+        $alunos = Aluno::orderBy('nome')->get();
+        return view('notificacoes.create', compact('alunos'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    // Salvar nova notificação
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'aluno_id' => 'required|exists:alunos,id',
+            'mensagem' => 'required|string|min:5',
+            'tipo' => 'required|in:vencimento,pagamento,lembrete',
+            'data_envio' => 'required|date'
+        ]);
+
+        Notificacao::create($validated);
+
+        return redirect()->route('notificacoes.index')->with('success', 'Notificação criada com sucesso!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    // Formulário de edição
+    public function edit($id)
     {
-        //
+        $notificacao = Notificacao::findOrFail($id);
+        $alunos = Aluno::orderBy('nome')->get();
+
+        return view('notificacoes.edit', compact('notificacao', 'alunos'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    // Atualizar notificação
+    public function update(Request $request, $id)
     {
-        //
+        $notificacao = Notificacao::findOrFail($id);
+
+        $validated = $request->validate([
+            'aluno_id' => 'required|exists:alunos,id',
+            'mensagem' => 'required|string|min:5',
+            'tipo' => 'required|in:vencimento,pagamento,lembrete',
+            'data_envio' => 'required|date'
+        ]);
+
+        $notificacao->update($validated);
+
+        return redirect()->route('notificacoes.index')->with('success', 'Notificação atualizada com sucesso!');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    // Excluir notificação
+    public function destroy($id)
     {
-        //
-    }
+        $notificacao = Notificacao::findOrFail($id);
+        $notificacao->delete();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return redirect()->route('notificacoes.index')->with('success', 'Notificação excluída com sucesso!');
     }
 }
