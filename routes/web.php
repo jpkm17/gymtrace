@@ -50,5 +50,5 @@ Route::middleware(['auth', 'permission:administrador'])->group(function () {
 // ==============================
 Route::middleware(['auth', 'permission:instrutor'])->group(function () {
     Route::resource('presencas', PresencaController::class);
-    // Route::resource('alunos', AlunoController::class);
+    Route::resource('alunos', AlunoController::class)->only(['index', 'show']);
 });

@@ -30,6 +30,9 @@ class UsuarioController extends Controller
             'perfil' => 'required|in:administrador,instrutor'
         ]);
 
+        // Criptografar a senha ANTES de salvar
+        $validated['senha'] = bcrypt($validated['senha']);
+
         Usuario::create($validated);
 
         return redirect()->route('usuarios.index')->with('success', 'Usuário criado com sucesso!');
