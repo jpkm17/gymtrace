@@ -1,78 +1,190 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🎯 Sistema de Gerenciamento de Academia  
+Projeto desenvolvido em Laravel 12 e PostgreSQL como parte do Trabalho de Conclusão de Curso (TCC) da FATEC.
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Este sistema tem como objetivo auxiliar a administração de academias de pequeno porte, oferecendo funcionalidades como gerenciamento de alunos, planos, pagamentos, presenças, usuários e envio de notificações por e-mail.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 📌 Tecnologias Utilizadas
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **PHP 8.4+**
+- **Laravel 12**
+- **Composer 2.8+**
+- **PostgreSQL**  
+- **MaterializeCSS**
+- **Blade Templates**
+- **Gmail SMTP** para envio de e-mails
+- **NPM** (para assets e dependências front-end)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
-
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 📁 Estrutura do Projeto
+/app
+/Models
+/Http/Controllers
+/resources
+/views
+/routes
+web.php
+/database
+/migrations
+/seeders
+/public
 
 
-# Rodar as migrações do banco de dados
+--
+
+## ⚙️ Pré-requisitos
+
+Antes de instalar o projeto, garanta que possui:
+
+- PHP 8.4 ou superior  
+- Composer instalado  
+- Node.js + npm  
+- Servidor PostgreSQL  
+- Extensões do PHP adequadas (pdo_pgsql, openssl, mbstring, tokenizer etc.)
+
+---
+
+## 🚀 Instalação do Projeto
+
+### 1️⃣ Clonar o repositório
+
+
+```bash
+git clone https://github.com/SEU-USUARIO/seu-projeto.git
+cd seu-projeto
+```
+
+Instalar dependências do PHP (Laravel)
+```bash
+composer install
+```
+
+Instalar dependências do front-end
+```bash
+npm install
+```
+
+Se desejar compilar assets:
+```bash
+npm run dev
+```
+
+
+🛠 Configuração do Ambiente
+4️⃣ Criar o arquivo .env
+cp .env.example .env
+
+5️⃣ Gerar a chave da aplicação
+php artisan key:generate
+
+6️⃣ Configurar o banco de dados no .env
+
+Exemplo:
+
+DB_CONNECTION=pgsql
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_DATABASE=academia
+DB_USERNAME=postgres
+DB_PASSWORD=suasenha
+
+📬 Configuração do Gmail (Envio de E-mails)
+
+No .env, configure:
+
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=seu-email@gmail.com
+MAIL_PASSWORD=sua-senha-ou-app-password
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=seu-email@gmail.com
+MAIL_FROM_NAME="Sistema Academia"
+
+
+⚠️ Importante:
+Ative “Senha de App” no Gmail caso use autenticação de 2 fatores.
+
+🗃 Executar Migrations + Seed
+7️⃣ Criar tabelas no banco de dados
 php artisan migrate
 
-# (Opcional) Rodar seeders, se existirem
+8️⃣ Rodar o Seeder (cria automaticamente o usuário administrador)
 php artisan db:seed
 
-# Limpar caches do Laravel (útil após mudanças no .env)
-php artisan config:clear
-php artisan cache:clear
-php artisan route:clear
-php artisan view:clear
 
-# Iniciar o servidor local
+O seed cria um usuário administrador padrão:
+
+E-mail: admin@academia.com
+Senha: 123456
+
+▶️ Executar o Servidor
 php artisan serve
 
-# Acesse no navegador:
-# http://127.0.0.1:8000
+
+Acesse no navegador:
+
+http://127.0.0.1:8000
+
+🔐 Login no Sistema
+
+Após rodar os seeds:
+
+Administrador
+
+- Email: admin@academia.com
+
+- Senha: 123456
+
+O administrador possui acesso total:
+
+* Alunos
+
+* Pagamentos
+
+* Presenças
+
+* Planos
+
+* Usuários
+
+* Notificações
+
+* Instrutor
+
+Criado manualmente via painel de administração ou pelo seed adicional (se configurado).
+
+📦 Funcionalidades
+✔ Administrador
+
+* Cadastro e gestão de alunos
+
+* Cadastro de planos
+
+* Controle de pagamentos
+
+* Envio de notificações
+
+* Controle de usuários
+
+* Dashboard com indicadores
+
+✔ Instrutor
+
+* Registro de presenças
+
+* Consulta de alunos
+
+🧪 Testes (Opcional)
+php artisan test
+
+📄 Licença
+
+Projeto acadêmico desenvolvido para fins educacionais como parte do TCC da FATEC.
+
+🤝 Autores
+* João Pedro Meneguesso
+* Arthur Minoru Maezono
+FATEC — Faculdade de Tecnologia • Curso: Análise e Desenvolvimento de Sistemas
