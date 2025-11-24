@@ -187,4 +187,4 @@ Projeto acadêmico desenvolvido para fins educacionais como parte do TCC da FATE
 🤝 Autores
 * João Pedro Meneguesso
 * Arthur Minoru Maezono
-FATEC — Faculdade de Tecnologia • Curso: Análise e Desenvolvimento de Sistemas
+<br> FATEC — Faculdade de Tecnologia • Curso: Análise e Desenvolvimento de Sistemas
