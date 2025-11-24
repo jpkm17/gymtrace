@@ -29,26 +29,46 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
-
 });
 
 
+// // ==============================
+// // ROTAS APENAS PARA ADMINISTRADOR
+// // ==============================
+// Route::middleware(['auth', 'permission:administrador'])->group(function () {
+//     Route::resource('usuarios', UsuarioController::class);
+//     Route::resource('planos', PlanoController::class);
+//     Route::resource('alunos', AlunoController::class);
+//     Route::resource('pagamentos', PagamentoController::class);
+//     Route::resource('notificacoes', NotificacaoController::class);
+// });
+
+
+// // ==============================
+// // ROTAS APENAS PARA INSTRUTOR
+// // ==============================
+// Route::middleware(['auth', 'permission:instrutor'])->group(function () {
+//     Route::resource('presencas', PresencaController::class);
+//     Route::resource('alunos', AlunoController::class)->only(['index', 'show']);
+// });
+
 // ==============================
-// ROTAS APENAS PARA ADMINISTRADOR
+// ROTAS PROTEGIDAS
 // ==============================
-Route::middleware(['auth', 'permission:administrador'])->group(function () {
-    Route::resource('usuarios', UsuarioController::class);
-    Route::resource('planos', PlanoController::class);
+Route::middleware('auth')->group(function () {
+
+    // Admin + Instrutor têm acesso parcial (controlado no controller)
     Route::resource('alunos', AlunoController::class);
-    Route::resource('pagamentos', PagamentoController::class);
-    Route::resource('notificacoes', NotificacaoController::class);
-});
 
+    // Rotas específicas de cada papel
+    Route::middleware('permission:administrador')->group(function () {
+        Route::resource('usuarios', UsuarioController::class);
+        Route::resource('planos', PlanoController::class);
+        Route::resource('pagamentos', PagamentoController::class);
+        Route::resource('notificacoes', NotificacaoController::class);
+    });
 
-// ==============================
-// ROTAS APENAS PARA INSTRUTOR
-// ==============================
-Route::middleware(['auth', 'permission:instrutor'])->group(function () {
-    Route::resource('presencas', PresencaController::class);
-    Route::resource('alunos', AlunoController::class)->only(['index', 'show']);
+    Route::middleware('permission:instrutor')->group(function () {
+        Route::resource('presencas', PresencaController::class);
+    });
 });
