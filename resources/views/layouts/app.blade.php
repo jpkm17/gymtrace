@@ -12,7 +12,7 @@
 
 <nav class="blue">
     <div class="nav-wrapper container">
-        <a href="{{ route('dashboard') }}" class="brand-logo">Academia</a>
+        <a href="{{ route('dashboard') }}" class="brand-logo">Gymtrace</a>
         <ul id="nav-mobile" class="right hide-on-med-and-down">
             @auth
                 <li><a href="{{ route('dashboard') }}">Dashboard</a></li>

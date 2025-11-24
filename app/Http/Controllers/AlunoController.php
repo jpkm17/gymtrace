@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Aluno;
 use App\Models\Plano;
+use App\Models\Pagamento;
 use Illuminate\Http\Request;
 
 class AlunoController extends Controller
@@ -30,16 +31,30 @@ class AlunoController extends Controller
             'data_nascimento' => 'required|date',
             'contato' => 'nullable|string|max:20',
             'email' => 'required|email|unique:alunos,email',
-            'status' => 'required|string',
-            'plano_id' => 'required|exists:planos,id'
+            'plano_id' => 'required|exists:planos,id',
+            'status' => 'required|in:ativo,inativo,inadimplente'
         ]);
 
-        $validated['criado_por'] = auth()->id() ?? 1; // Exemplo
+        // Define quem criou
+        $validated['criado_por'] = auth()->id();
 
-        Aluno::create($validated);
+        // 1) Cria o aluno
+        $aluno = Aluno::create($validated);
 
-        return redirect()->route('alunos.index')->with('success', 'Aluno cadastrado com sucesso!');
+        // 2) Pega o plano do aluno
+        $plano = Plano::find($validated['plano_id']);
+
+        // 3) Cria o pagamento pendente vinculado ao aluno
+        Pagamento::create([
+            'aluno_id' => $aluno->id,
+            'valor' => $plano->valor,
+            'status' => 'pendente',
+            'data_pagamento' => now(), // ou a data de vencimento do mês
+        ]);
+
+        return redirect()->route('alunos.index')->with('success', 'Aluno criado com sucesso! Pagamento pendente gerado automaticamente.');
     }
+
 
     // Formulário de edição
     public function edit($id)
